@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Student } from './student.entity';
 import { CreateStudentInput } from './create-student.input';
 import { v4 as uuid } from 'uuid';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class StudentService {
@@ -31,5 +31,14 @@ export class StudentService {
     });
 
     return this.studentRepository.save(student);
+  }
+
+  async getManyStudents(studentIds: string[]): Promise<Student[]> {
+    // "Query Builder is not supported by MongoDB,"
+    // indicates that you're trying to use TypeORM's query builder feature with MongoDB.
+    // However, MongoDB does not support query builders like SQL databases do.
+    return this.studentRepository.findBy({
+      id: In(studentIds),
+    });
   }
 }
